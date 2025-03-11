@@ -18,7 +18,7 @@ interface PdfPreviewDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userData: User | null;
-  downloadPdf: (userData: User, template: string) => Promise<void>;
+  downloadPdf?: (userData: User, template: string) => Promise<void>;
 }
 
 export default function PdfPreviewDialog({
