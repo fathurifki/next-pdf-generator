@@ -43,7 +43,10 @@ export default function JsonPlaceholderTab() {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(process.env.JSON_PLACEHOLDER_API_URL);
+      const response = await fetch(
+        process.env.JSON_PLACEHOLDER_API_URL ||
+          process.env.NEXT_PUBLIC_JSON_PLACEHOLDER_API_URL
+      );
       const data = await response.json();
 
       const formattedData: User[] = data.map((user: any) => ({
