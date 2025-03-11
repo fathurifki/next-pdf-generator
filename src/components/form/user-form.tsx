@@ -18,31 +18,64 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { User } from "@/types/user";
 
 const userFormSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters." })
+    .max(100, { message: "Name must be less than 100 characters." }),
+  email: z
+    .string()
+    .email({ message: "Please enter a valid email address." })
+    .max(255, { message: "Email must be less than 255 characters." }),
   phone: z
     .string()
-    .min(5, { message: "Phone number must be at least 5 characters." }),
+    .min(7, { message: "Please enter a valid phone number." })
+    .max(20, { message: "Phone number is too long." }),
   username: z
     .string()
-    .min(3, { message: "Username must be at least 3 characters." }),
-  website: z.string().optional(),
+    .min(3, { message: "Username must be at least 3 characters." })
+    .max(50, { message: "Username must be less than 50 characters." })
+    .regex(/^[a-zA-Z0-9_]+$/, {
+      message: "Username can only contain letters, numbers and underscores.",
+    }),
+  website: z
+    .string()
+    .url({ message: "Please enter a valid URL." })
+    .optional()
+    .or(z.literal("")),
   company: z.object({
     name: z
       .string()
-      .min(2, { message: "Company name must be at least 2 characters." }),
-    catchPhrase: z.string().optional(),
-    bs: z.string().optional(),
+      .min(2, { message: "Company name must be at least 2 characters." })
+      .max(100, { message: "Company name is too long." }),
+    catchPhrase: z
+      .string()
+      .max(200, { message: "Catch phrase is too long." })
+      .optional()
+      .or(z.literal("")),
+    bs: z
+      .string()
+      .max(200, { message: "Business statement is too long." })
+      .optional()
+      .or(z.literal("")),
   }),
   address: z.object({
     street: z
       .string()
-      .min(2, { message: "Street must be at least 2 characters." }),
-    suite: z.string().optional(),
-    city: z.string().min(2, { message: "City must be at least 2 characters." }),
+      .min(2, { message: "Street must be at least 2 characters." })
+      .max(100, { message: "Street name is too long." }),
+    suite: z
+      .string()
+      .max(50, { message: "Suite/Apt is too long." })
+      .optional()
+      .or(z.literal("")),
+    city: z
+      .string()
+      .min(2, { message: "City must be at least 2 characters." })
+      .max(100, { message: "City name is too long." }),
     zipcode: z
       .string()
-      .min(2, { message: "Zipcode must be at least 2 characters." }),
+      .min(5, { message: "Please enter a valid zipcode." })
+      .max(10, { message: "Zipcode is too long." }),
   }),
 });
 

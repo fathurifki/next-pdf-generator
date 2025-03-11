@@ -27,6 +27,7 @@ import { generatePdf } from "@/lib/pdf-download";
 
 export default function JsonPlaceholderTab() {
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldRefetch, setShouldRefetch] = useState(false);
   const { toast } = useToast();
   const {
     selectedUser,
@@ -67,6 +68,7 @@ export default function JsonPlaceholderTab() {
       }));
 
       setListData(formattedData);
+      setShouldRefetch(false);
       toast({
         title: "Data fetched successfully",
         description: `Loaded ${formattedData.length} users from JSONPlaceholder API`,
@@ -84,10 +86,14 @@ export default function JsonPlaceholderTab() {
   };
 
   useEffect(() => {
-    if (listData.length === 0) {
+    if (listData.length === 0 || shouldRefetch) {
       fetchUsers();
     }
-  }, [listData]);
+  }, [listData.length, shouldRefetch]);
+
+  const handleRefresh = () => {
+    setShouldRefetch(true);
+  };
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
@@ -131,7 +137,7 @@ export default function JsonPlaceholderTab() {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <Button
-          onClick={fetchUsers}
+          onClick={handleRefresh}
           disabled={isLoading}
           variant="outline"
           className="w-full sm:w-auto"
