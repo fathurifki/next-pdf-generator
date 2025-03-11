@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import DashboardHeader from "@/components/layout/dashboard-header";
+import DashboardSidebar from "@/components/layout/dashboard-sidebar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +30,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <DashboardSidebar />
+        <DashboardHeader>
+          <span className="text-2xl font-bold">PDF Document Generator</span>
+        </DashboardHeader>
+        <div className="flex-1">{children}</div>
       </body>
     </html>
   );
