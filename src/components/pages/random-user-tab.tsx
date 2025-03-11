@@ -16,11 +16,14 @@ export default function RandomUserTab() {
   const { setIsPdfPreviewOpen, detailUserData, setDetailUserData } =
     usePdfStore();
 
+  console.log("SECRET_RANDOM_USER_API_URL", process.env.SECRET_RANDOM_USER_API_URL);
+  console.log("NEXT_PUBLIC_RANDOM_USER_API_URL", process.env.NEXT_PUBLIC_RANDOM_USER_API_URL);
+
   const fetchRandomUserData = async () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        process.env.RANDOM_USER_API_URL ||
+        process.env.SECRET_RANDOM_USER_API_URL ||
           process.env.NEXT_PUBLIC_RANDOM_USER_API_URL
       );
       const data = await response.json();
