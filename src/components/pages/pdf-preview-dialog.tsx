@@ -95,7 +95,7 @@ export default function PdfPreviewDialog({
           </Button>
           <Button
             disabled={isLoading}
-            onClick={() => downloadPdf(userData, template)}
+            onClick={() => downloadPdf && downloadPdf?.(userData, template)}
           >
             <Download className="mr-2 h-4 w-4" />
             Download PDF
