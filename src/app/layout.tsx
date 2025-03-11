@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <DashboardSidebar />
         <DashboardHeader>
-          <span className="text-2xl font-bold">PDF Document Generator</span>
+          <span className="text-xl sm:text-2xl font-bold">PDF Document Generator</span>
         </DashboardHeader>
         <div className="flex-1">{children}</div>
       </body>

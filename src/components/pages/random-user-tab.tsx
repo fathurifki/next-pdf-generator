@@ -85,13 +85,18 @@ export default function RandomUserTab() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-0">
       <div className="flex justify-center">
-        <Button onClick={fetchRandomUserData} disabled={isLoading} size="lg">
+        <Button 
+          onClick={fetchRandomUserData} 
+          disabled={isLoading} 
+          size="lg"
+          className="w-full sm:w-auto"
+        >
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Fetching Random User...
+              Fetching...
             </>
           ) : (
             "Generate Random User"
@@ -100,23 +105,23 @@ export default function RandomUserTab() {
       </div>
 
       {detailUserData ? (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <h3 className="text-lg font-medium">Edit User Information</h3>
-            <Button onClick={() => setIsPdfPreviewOpen(true)} variant="outline">
+            <Button 
+              onClick={() => setIsPdfPreviewOpen(true)} 
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
               Preview PDF
             </Button>
           </div>
 
           <UserForm initialData={detailUserData} onSubmit={handleFormSubmit} />
-
-          <PdfPreviewDialog
-            userData={detailUserData}
-            downloadPdf={downloadPdf}
-          />
+          <PdfPreviewDialog userData={detailUserData} downloadPdf={downloadPdf} />
         </div>
       ) : (
-        <div className="flex items-center justify-center h-64 border rounded-lg bg-muted/20">
+        <div className="flex items-center justify-center h-48 sm:h-64 border rounded-lg bg-muted/20 p-4">
           <div className="text-center space-y-2">
             <p className="text-muted-foreground">No user data loaded yet.</p>
             <p className="text-sm text-muted-foreground">

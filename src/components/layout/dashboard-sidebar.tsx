@@ -54,6 +54,7 @@ export default function DashboardSidebar({ className }: SidebarProps) {
             <nav className="flex flex-col gap-1">
               <Link
                 href="/"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
               >
                 <Users className="h-4 w-4" />
@@ -61,6 +62,7 @@ export default function DashboardSidebar({ className }: SidebarProps) {
               </Link>
               <Link
                 href="/generate-random"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
               >
                 <FileText className="h-4 w-4" />

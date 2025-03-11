@@ -48,10 +48,10 @@ export default function PdfPreviewDialog({
 
   return (
     <Dialog open={isPdfPreviewOpen} onOpenChange={setIsPdfPreviewOpen}>
-      <DialogContent className="max-w-4xl max-h-[90vh]">
+      <DialogContent className="max-w-4xl max-h-[90vh] w-[95vw] p-4 md:p-6">
         <DialogHeader>
           <DialogTitle>PDF Preview</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="hidden sm:block">
             Preview how your PDF document will look before downloading.
           </DialogDescription>
         </DialogHeader>
@@ -70,7 +70,7 @@ export default function PdfPreviewDialog({
           </Tabs>
 
           {isLoading ? (
-            <div className="flex items-center justify-center h-[500px] w-full border rounded-lg bg-muted/50">
+            <div className="flex items-center justify-center h-[300px] sm:h-[500px] w-full border rounded-lg bg-muted/50">
               <div className="flex flex-col items-center gap-2">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">
@@ -79,8 +79,8 @@ export default function PdfPreviewDialog({
               </div>
             </div>
           ) : (
-            <div className="overflow-auto max-h-[500px] border rounded-lg">
-              <div className="bg-white p-8 min-h-[500px] shadow-sm">
+            <div className="overflow-auto max-h-[300px] sm:max-h-[500px] border rounded-lg">
+              <div className="bg-white p-4 sm:p-8 min-h-[300px] sm:min-h-[500px] shadow-sm">
                 {template === "professional" && (
                   <ProfessionalTemplate userData={detailUserData} />
                 )}
@@ -92,13 +92,18 @@ export default function PdfPreviewDialog({
           )}
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setIsPdfPreviewOpen(false)}>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => setIsPdfPreviewOpen(false)}
+            className="w-full sm:w-auto"
+          >
             Close
           </Button>
           <Button
             disabled={isLoading}
             onClick={() => downloadPdf && downloadPdf?.(detailUserData, template)}
+            className="w-full sm:w-auto"
           >
             <Download className="mr-2 h-4 w-4" />
             Download PDF
@@ -111,13 +116,13 @@ export default function PdfPreviewDialog({
 
 function ProfessionalTemplate({ userData }: { userData: User }) {
   return (
-    <div className="space-y-6">
-      <div className="border-b pb-6">
-        <h1 className="text-3xl font-bold text-gray-900">{userData.name}</h1>
-        <p className="text-lg text-gray-600">{userData.company.name}</p>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="border-b pb-4 sm:pb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{userData.name}</h1>
+        <p className="text-base sm:text-lg text-gray-600">{userData.company.name}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div className="space-y-4">
           <div>
             <h2 className="text-xl font-semibold text-gray-800">
@@ -187,13 +192,13 @@ function ProfessionalTemplate({ userData }: { userData: User }) {
 
 function ModernTemplate({ userData }: { userData: User }) {
   return (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 -mx-8 -mt-8 mb-6">
-        <h1 className="text-3xl font-bold text-white">{userData.name}</h1>
-        <p className="text-blue-100">{userData.company.name}</p>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 sm:p-6 -mx-4 sm:-mx-8 -mt-4 sm:-mt-8 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-white">{userData.name}</h1>
+        <p className="text-sm sm:text-base text-blue-100">{userData.company.name}</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
         <div className="col-span-1 space-y-6">
           <div className="bg-gray-50 p-4 rounded-lg">
             <h2 className="text-lg font-medium text-gray-900 mb-3">Contact</h2>
