@@ -43,7 +43,7 @@ export default function JsonPlaceholderTab() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
+        process.env.NEXT_PUBLIC_JSON_PLACEHOLDER_API_URL
       );
       const data = await response.json();
 

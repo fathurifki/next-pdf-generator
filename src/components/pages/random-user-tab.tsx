@@ -19,7 +19,7 @@ export default function RandomUserTab() {
   const fetchRandomUserData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("https://randomuser.me/api/");
+      const response = await fetch(process.env.NEXT_PUBLIC_RANDOM_USER_API_URL);
       const data = await response.json();
       const user = data.results[0];
 
