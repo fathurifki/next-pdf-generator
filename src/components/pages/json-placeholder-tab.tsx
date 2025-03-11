@@ -24,7 +24,7 @@ import UserEditForm from "@/components/form/user-edit-form";
 import PdfPreviewDialog from "@/components/pages/pdf-preview-dialog";
 import { usePdfStore } from "@/store/use-pdf-store";
 import { generatePdf } from "@/lib/pdf-download";
-import { getRequiredEnvVar } from '@/lib/env';
+import { getRequiredEnvVar } from "@/lib/env";
 
 export default function JsonPlaceholderTab() {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,9 +43,7 @@ export default function JsonPlaceholderTab() {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_JSON_PLACEHOLDER_API_URL
-      );
+      const response = await fetch(process.env.JSON_PLACEHOLDER_API_URL);
       const data = await response.json();
 
       const formattedData: User[] = data.map((user: any) => ({
