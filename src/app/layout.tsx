@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import DashboardHeader from "@/components/layout/dashboard-header";
 import DashboardSidebar from "@/components/layout/dashboard-sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,9 +33,12 @@ export default function RootLayout({
       >
         <DashboardSidebar />
         <DashboardHeader>
-          <span className="text-xl sm:text-2xl font-bold">PDF Document Generator</span>
+          <span className="text-xl sm:text-2xl font-bold">
+            PDF Document Generator
+          </span>
         </DashboardHeader>
         <div className="flex-1">{children}</div>
+        <Toaster />
       </body>
     </html>
   );

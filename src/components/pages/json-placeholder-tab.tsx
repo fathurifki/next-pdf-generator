@@ -25,17 +25,13 @@ import PdfPreviewDialog from "@/components/pages/pdf-preview-dialog";
 import { usePdfStore } from "@/store/use-pdf-store";
 import { generatePdf } from "@/lib/pdf-download";
 
-
 export default function JsonPlaceholderTab() {
-  const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const {
     selectedUser,
     setSelectedUser,
-    template,
     setIsPdfPreviewOpen,
-    isPdfPreviewOpen,
     setEditModal,
     editModal,
     setListData,
@@ -134,7 +130,12 @@ export default function JsonPlaceholderTab() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <Button onClick={fetchUsers} disabled={isLoading} variant="outline" className="w-full sm:w-auto">
+        <Button
+          onClick={fetchUsers}
+          disabled={isLoading}
+          variant="outline"
+          className="w-full sm:w-auto"
+        >
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -151,10 +152,18 @@ export default function JsonPlaceholderTab() {
           <TableHeader>
             <TableRow>
               <TableHead className="min-w-[150px]">Name</TableHead>
-              <TableHead className="min-w-[200px] hidden sm:table-cell">Email</TableHead>
-              <TableHead className="min-w-[150px] hidden md:table-cell">Company</TableHead>
-              <TableHead className="min-w-[100px] hidden lg:table-cell">City</TableHead>
-              <TableHead className="text-right min-w-[100px]">Actions</TableHead>
+              <TableHead className="min-w-[200px] hidden sm:table-cell">
+                Email
+              </TableHead>
+              <TableHead className="min-w-[150px] hidden md:table-cell">
+                Company
+              </TableHead>
+              <TableHead className="min-w-[100px] hidden lg:table-cell">
+                City
+              </TableHead>
+              <TableHead className="text-right min-w-[100px]">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -174,9 +183,15 @@ export default function JsonPlaceholderTab() {
               listData.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell className="hidden sm:table-cell">{user.email}</TableCell>
-                  <TableCell className="hidden md:table-cell">{user.company.name}</TableCell>
-                  <TableCell className="hidden lg:table-cell">{user.address.city}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    {user.email}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {user.company.name}
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {user.address.city}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
@@ -216,7 +231,10 @@ export default function JsonPlaceholderTab() {
             <UserEditForm
               user={selectedUser}
               onSave={handleSaveUser}
-              onCancel={() => setSelectedUser(null)}
+              onCancel={() => {
+                setSelectedUser(null);
+                setEditModal(false);
+              }}
             />
           )}
         </DialogContent>
