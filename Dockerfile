@@ -13,17 +13,17 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the application code to the working directory
 COPY . .
 
-ARG DOCKERFILE_ENVIRONMENT
-ARG SECRET_API_URL_STAGING
-ARG NEXT_PUBLIC_API_URL_STAGING
-ARG SECRET_API_URL_PRODUCTION
-ARG NEXT_PUBLIC_API_URL_PRODUCTION
+ENV NEXT_PUBLIC_JSON_PLACEHOLDER_API_URL=https://jsonplaceholder.typicode.com/users
+ENV NEXT_PUBLIC_RANDOM_USER_API_URL=https://randomuser.me/api/
+ENV SECRET_JSON_PLACEHOLDER_API_URL=https://jsonplaceholder.typicode.com/users
+ENV SECRET_RANDOM_USER_API_URL=https://randomuser.me/api/
 
+# Create .env file from environment variables
 RUN echo "Creating .env" && \
-    echo "JSON_PLACEHOLDER_API_URL=${JSON_PLACEHOLDER_API_URL}" > .env && \
-    echo "RANDOM_USER_API_URL=${RANDOM_USER_API_URL}" >> .env && \
+    echo "SECRET_JSON_PLACEHOLDER_API_URL=${SECRET_JSON_PLACEHOLDER_API_URL}" > .env && \
+    echo "SECRET_RANDOM_USER_API_URL=${SECRET_RANDOM_USER_API_URL}" >> .env && \
     echo "NEXT_PUBLIC_JSON_PLACEHOLDER_API_URL=${NEXT_PUBLIC_JSON_PLACEHOLDER_API_URL}" >> .env && \
-    echo "NEXT_PUBLIC_RANDOM_USER_API_URL=${NEXT_PUBLIC_RANDOM_USER_API_URL}" >> .env; 
+    echo "NEXT_PUBLIC_RANDOM_USER_API_URL=${NEXT_PUBLIC_RANDOM_USER_API_URL}" >> .env
 
 RUN cat .env
 
