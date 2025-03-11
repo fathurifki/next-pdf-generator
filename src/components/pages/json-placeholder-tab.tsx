@@ -17,57 +17,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Edit,  FileSpreadsheetIcon } from "lucide-react";
+import { Loader2, Edit, FileSpreadsheetIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/types/user";
 import UserEditForm from "@/components/form/user-edit-form";
 import PdfPreviewDialog from "@/components/pages/pdf-preview-dialog";
+import { usePdfStore } from "@/store/use-pdf-store";
+import { generatePdf } from "@/lib/pdf-download";
 
-const generatePdf = async (user: User, template: string) => {
-  try {
-    const response = await fetch("/api/generate-pdf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ user, template }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || "Failed to generate PDF");
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/pdf")) {
-      throw new Error("Invalid response format");
-    }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${user.name.replace(/\s+/g, "_")}_details.pdf`;
-
-    setTimeout(() => {
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }, 100);
-
-    return true;
-  } catch (error) {
-    console.error("Error generating PDF:", error);
-    throw error;
-  }
-};
 
 export default function JsonPlaceholderTab() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isPdfPreviewOpen, setIsPdfPreviewOpen] = useState(false);
   const { toast } = useToast();
+  const {
+    selectedUser,
+    setSelectedUser,
+    template,
+    setIsPdfPreviewOpen,
+    isPdfPreviewOpen,
+    setEditModal,
+    editModal,
+    setListData,
+    listData,
+  } = usePdfStore();
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -97,7 +70,7 @@ export default function JsonPlaceholderTab() {
         },
       }));
 
-      setUsers(formattedData);
+      setListData(formattedData);
       toast({
         title: "Data fetched successfully",
         description: `Loaded ${formattedData.length} users from JSONPlaceholder API`,
@@ -115,12 +88,14 @@ export default function JsonPlaceholderTab() {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (listData.length === 0) {
+      fetchUsers();
+    }
+  }, [listData]);
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
-    setIsEditDialogOpen(true);
+    setEditModal(true);
   };
 
   const handlePreviewPdf = async (user: User) => {
@@ -145,10 +120,11 @@ export default function JsonPlaceholderTab() {
   };
 
   const handleSaveUser = (updatedUser: User) => {
-    setUsers(
-      users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+    setListData(
+      listData.map((user) => (user.id === updatedUser.id ? updatedUser : user))
     );
-    setIsEditDialogOpen(false);
+    setSelectedUser(null);
+    setEditModal(false);
     toast({
       title: "User updated",
       description: `${updatedUser.name}'s information has been updated`,
@@ -188,14 +164,14 @@ export default function JsonPlaceholderTab() {
                   <Loader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground" />
                 </TableCell>
               </TableRow>
-            ) : users.length === 0 ? (
+            ) : listData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="h-24 text-center">
                   No users found.
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
+              listData.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
@@ -228,7 +204,7 @@ export default function JsonPlaceholderTab() {
         </Table>
       </div>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog open={editModal} onOpenChange={() => setEditModal(!editModal)}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>
@@ -240,18 +216,13 @@ export default function JsonPlaceholderTab() {
             <UserEditForm
               user={selectedUser}
               onSave={handleSaveUser}
-              onCancel={() => setIsEditDialogOpen(false)}
+              onCancel={() => setSelectedUser(null)}
             />
           )}
         </DialogContent>
       </Dialog>
 
-      <PdfPreviewDialog
-        open={isPdfPreviewOpen}
-        onOpenChange={setIsPdfPreviewOpen}
-        userData={selectedUser}
-        downloadPdf={downloadPdf}
-      />
+      <PdfPreviewDialog userData={selectedUser} downloadPdf={downloadPdf} />
     </div>
   );
 }

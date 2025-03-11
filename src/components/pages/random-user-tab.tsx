@@ -7,12 +7,14 @@ import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/types/user";
 import UserForm from "@/components/form/user-form";
 import PdfPreviewDialog from "@/components/pages/pdf-preview-dialog";
+import { usePdfStore } from "@/store/use-pdf-store";
+import { generatePdf } from "@/lib/pdf-download";
 
 export default function RandomUserTab() {
-  const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPdfPreviewOpen, setIsPdfPreviewOpen] = useState(false);
   const { toast } = useToast();
+  const { setIsPdfPreviewOpen, detailUserData, setDetailUserData } =
+    usePdfStore();
 
   const fetchRandomUserData = async () => {
     setIsLoading(true);
@@ -41,7 +43,7 @@ export default function RandomUserTab() {
         },
       };
 
-      setUserData(formattedData);
+      setDetailUserData(formattedData);
       toast({
         title: "Data fetched successfully",
         description: "User data has been loaded from Random User API",
@@ -59,11 +61,27 @@ export default function RandomUserTab() {
   };
 
   const handleFormSubmit = (data: User) => {
-    setUserData(data);
+    setDetailUserData(data);
     toast({
       title: "Data updated",
       description: "Your changes have been saved",
     });
+  };
+
+  const downloadPdf = async (user: User, template: PdfTemplate) => {
+    try {
+      await generatePdf(user, template);
+      toast({
+        title: "PDF Generated",
+        description: "The PDF has been generated and downloaded successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate PDF",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -81,7 +99,7 @@ export default function RandomUserTab() {
         </Button>
       </div>
 
-      {userData ? (
+      {detailUserData ? (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-medium">Edit User Information</h3>
@@ -90,12 +108,11 @@ export default function RandomUserTab() {
             </Button>
           </div>
 
-          <UserForm initialData={userData} onSubmit={handleFormSubmit} />
+          <UserForm initialData={detailUserData} onSubmit={handleFormSubmit} />
 
           <PdfPreviewDialog
-            open={isPdfPreviewOpen}
-            onOpenChange={setIsPdfPreviewOpen}
-            userData={userData}
+            userData={detailUserData}
+            downloadPdf={downloadPdf}
           />
         </div>
       ) : (

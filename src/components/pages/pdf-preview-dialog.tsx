@@ -13,27 +13,28 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Download } from "lucide-react";
 import type { User } from "@/types/user";
+import { usePdfStore } from "@/store/use-pdf-store";
 
 interface PdfPreviewDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   userData: User | null;
   downloadPdf?: (userData: User, template: string) => Promise<void>;
 }
 
 export default function PdfPreviewDialog({
-  open,
-  onOpenChange,
   userData,
   downloadPdf,
 }: PdfPreviewDialogProps) {
-  const [template, setTemplate] = useState<"professional" | "modern">(
-    "professional"
-  );
   const [isLoading, setIsLoading] = useState(true);
+  const {
+    template,
+    setTemplate,
+    isPdfPreviewOpen,
+    setIsPdfPreviewOpen,
+    detailUserData,
+  } = usePdfStore();
 
   useEffect(() => {
-    if (open) {
+    if (isPdfPreviewOpen) {
       setIsLoading(true);
       const timer = setTimeout(() => {
         setIsLoading(false);
@@ -41,12 +42,12 @@ export default function PdfPreviewDialog({
 
       return () => clearTimeout(timer);
     }
-  }, [open, template]);
+  }, [isPdfPreviewOpen, template]);
 
-  if (!userData) return null;
+  if (!detailUserData) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isPdfPreviewOpen} onOpenChange={setIsPdfPreviewOpen}>
       <DialogContent className="max-w-4xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>PDF Preview</DialogTitle>
@@ -57,8 +58,10 @@ export default function PdfPreviewDialog({
 
         <div className="space-y-4">
           <Tabs
-            defaultValue="professional"
-            onValueChange={(value) => setTemplate(value as any)}
+            defaultValue={template}
+            onValueChange={(value) =>
+              setTemplate(value as "professional" | "modern")
+            }
           >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="professional">Professional</TabsTrigger>
@@ -79,10 +82,10 @@ export default function PdfPreviewDialog({
             <div className="overflow-auto max-h-[500px] border rounded-lg">
               <div className="bg-white p-8 min-h-[500px] shadow-sm">
                 {template === "professional" && (
-                  <ProfessionalTemplate userData={userData} />
+                  <ProfessionalTemplate userData={detailUserData} />
                 )}
                 {template === "modern" && (
-                  <ModernTemplate userData={userData} />
+                  <ModernTemplate userData={detailUserData} />
                 )}
               </div>
             </div>
@@ -90,12 +93,12 @@ export default function PdfPreviewDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => setIsPdfPreviewOpen(false)}>
             Close
           </Button>
           <Button
             disabled={isLoading}
-            onClick={() => downloadPdf && downloadPdf?.(userData, template)}
+            onClick={() => downloadPdf && downloadPdf?.(detailUserData, template)}
           >
             <Download className="mr-2 h-4 w-4" />
             Download PDF
