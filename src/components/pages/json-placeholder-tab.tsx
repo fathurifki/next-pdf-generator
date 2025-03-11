@@ -24,6 +24,7 @@ import UserEditForm from "@/components/form/user-edit-form";
 import PdfPreviewDialog from "@/components/pages/pdf-preview-dialog";
 import { usePdfStore } from "@/store/use-pdf-store";
 import { generatePdf } from "@/lib/pdf-download";
+import { getRequiredEnvVar } from '@/lib/env';
 
 export default function JsonPlaceholderTab() {
   const [isLoading, setIsLoading] = useState(false);
